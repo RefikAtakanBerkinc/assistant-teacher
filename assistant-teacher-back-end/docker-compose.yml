@@ -1,0 +1,21 @@
+version: '3.8'  # Daha güncel bir sürüm kullanımı önerilir, "3" de çalışabilir ancak daha net versiyon belirlemek iyi bir pratiktir.
+
+services:
+
+  postgres:
+    image: 'postgres:14.5'  # PostgreSQL'in 14.5 sürümünü kullanıyoruz.
+    container_name: postgres_container  # Konteyner adı belirterek daha düzenli çalışabiliriz.
+    restart: always  # Konteyner çökse bile otomatik olarak yeniden başlatılır.
+    environment:
+      POSTGRES_USER: root  # PostgreSQL kullanıcı adı
+      POSTGRES_PASSWORD: secret  # PostgreSQL şifresi
+      POSTGRES_DB: assistant_teacher  # Otomatik oluşturulacak veritabanı adı
+    logging:
+      options:
+        max-size: 10m  # Maksimum log boyutu (10 MB)
+        max-file: "3"  # Maksimum log dosya sayısı (3 dosya)
+    ports:
+      - '5432:5432'  # Host ve konteyner portlarının eşleştirilmesi
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data  # Veritabanı verilerini kalıcı yapmak için
+      - ./sql/assistant_teacher_db.sql:/docker-entrypoint-initdb.d/assistant_teacher_db.sql  # SQL dosyasını başlangıçta çalıştırmak için
